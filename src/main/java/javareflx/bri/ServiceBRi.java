@@ -1,43 +1,35 @@
 package javareflx.bri;
 
-
-import java.io.*;
 import java.net.*;
 
+class ServiceBRi extends Service {
 
-class ServiceBRi implements Runnable {
-	
-	private Socket client;
-	
 	ServiceBRi(Socket socket) {
-		client = socket;
+		super(socket, new Session());
 	}
 
-	public void run() {
-		try {
-			BufferedReader in = new BufferedReader (new InputStreamReader(client.getInputStream ( )));
-			PrintWriter out = new PrintWriter (client.getOutputStream ( ), true);
-			out.println(ServiceRegistry.staticToString()+"##Tapez le num�ro de service d�sir� :");
-			int choix = Integer.parseInt(in.readLine());
-			
-			// instancier le service numéro "choix" en lui passant la socket "client"
-			// invoquer run() pour cette instance ou la lancer dans un thread à part
-				
+	@Override
+	protected void onClientMessage(String message) {
+		int choix = Integer.parseInt(message);
+		Class<?> serviceClass = ServiceRegistry.getServiceClass(choix);
+		if(serviceClass != null) {
+			try {
+				Service service = (Service) serviceClass.newInstance();
+				service.init(getSocket(), getSession());
+				new Thread(service).start();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
 			}
-		catch (IOException e) {
-			//Fin du service
+		} else {
+			sendMessage("error service_not_found");
 		}
-
-		try {client.close();} catch (IOException e2) {}
-	}
-	
-	protected void finalize() throws Throwable {
-		 client.close(); 
 	}
 
-	// lancement du service
-	public void start() {
-		(new Thread(this)).start();		
+	@Override
+	protected void onStart() {
+		sendMessage(ServiceRegistry.staticToString()+"##Tapez le numéro de service désiré :");
+		receive();
 	}
-
 }
