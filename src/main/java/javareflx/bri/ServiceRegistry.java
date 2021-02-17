@@ -1,5 +1,7 @@
 package javareflx.bri;
 
+import javareflx.bri.Exception.ClassNotExtendsException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +22,12 @@ public class ServiceRegistry {
 			Class<?> c = Class.forName(serviceName);
 
 			servicesClasses.add(c);
+			throw new ClassNotExtendsException("La classe n'extends pas Service"); //non fini
 		}catch (ClassNotFoundException e){
 			System.err.println("La classe " + serviceName + "est introuvable.");
+			e.printStackTrace();
+
+		}catch (ClassNotExtendsException e){
 			e.printStackTrace();
 		}
 		// si non conforme --> exception avec message clair
