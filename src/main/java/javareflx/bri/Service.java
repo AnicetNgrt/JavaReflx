@@ -7,20 +7,31 @@ import java.net.Socket;
 
 public abstract class Service implements Runnable {
     private Socket socket;
-    protected Session session;
+    private Session session;
 
     private BufferedWriter out;
     private BufferedReader in;
 
+    private boolean isInitiated = false;
+
+    public Service() {}
+
     public Service(Socket socket, Session session) {
-        this.socket = socket;
-        this.session = session;
-        initIO();
+        init(socket, session);
     }
 
     @Override
     public void run() {
-        onStart();
+        if(isInitiated() && isConnected()) {
+            onStart();
+        }
+    }
+
+    public void init(Socket socket, Session session) {
+        this.socket = socket;
+        this.session = session;
+        initIO();
+        isInitiated = true;
     }
 
     private void initIO() {
@@ -30,6 +41,18 @@ public abstract class Service implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public boolean isInitiated() {
+        return isInitiated;
     }
 
     public boolean isConnected() {
