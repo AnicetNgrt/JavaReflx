@@ -7,17 +7,13 @@ import javareflx.bri.Session;
 
 // rien à ajouter ici
 public class ServiceInversion extends Service {
-	
-	private final Socket client;
-	
+
 	public ServiceInversion(Socket socket) {
 		super(socket, new Session());
-		client = socket;
 	}
 
 	public ServiceInversion(Socket socket, Session session) {
 		super(socket, session);
-		client = socket;
 	}
 
 	/*public static String toStringue() {
