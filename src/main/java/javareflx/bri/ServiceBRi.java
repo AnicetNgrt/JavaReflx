@@ -14,7 +14,8 @@ class ServiceBRi implements Runnable {
 	}
 
 	public void run() {
-		try {BufferedReader in = new BufferedReader (new InputStreamReader(client.getInputStream ( )));
+		try {
+			BufferedReader in = new BufferedReader (new InputStreamReader(client.getInputStream ( )));
 			PrintWriter out = new PrintWriter (client.getOutputStream ( ), true);
 			out.println(ServiceRegistry.staticToString()+"##Tapez le num�ro de service d�sir� :");
 			int choix = Integer.parseInt(in.readLine());
