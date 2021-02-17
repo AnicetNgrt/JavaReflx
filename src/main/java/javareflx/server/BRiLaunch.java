@@ -4,6 +4,8 @@ import java.net.URLClassLoader;
 import java.util.Scanner;
 
 import javareflx.bri.ServeurBRi;
+import javareflx.bri.ServiceRegistry;
+import javareflx.standard_services.ServiceInversion;
 
 public class BRiLaunch {
 	private final static int PORT_SERVICE = 3000;
@@ -14,18 +16,29 @@ public class BRiLaunch {
 		
 		// URLClassLoader sur ftp
 		URLClassLoader urlcl = null;
-		
-		System.out.println("Bienvenue dans votre gestionnaire dynamique d'activit� BRi");
-		System.out.println("Pour ajouter une activit�, celle-ci doit �tre pr�sente sur votre serveur ftp");
-		System.out.println("A tout instant, en tapant le nom de la classe, vous pouvez l'int�grer");
-		System.out.println("Les clients se connectent au serveur 3000 pour lancer une activit�");
+
+		try {
+			Class.forName(ServiceRegistry.class.getName());
+		} catch (ClassNotFoundException e) {
+			System.err.println("ServiceRegistry not found");
+			e.printStackTrace();
+			return;
+		}
+
+		System.out.println("Bienvenue dans votre gestionnaire dynamique d'activité BRi");
+		System.out.println("Pour ajouter une activité, celle-ci doit être présente sur votre serveur ftp");
+		System.out.println("A tout instant, en tapant le nom de la classe, vous pouvez l'intégrer");
+		System.out.println("Les clients se connectent au serveur 3000 pour lancer une activité");
 		
 		new Thread(new ServeurBRi(PORT_SERVICE)).start();
 		
 		while (true){
 				try {
 					String classeName = clavier.next();
-					// charger la classe et la d�clarer au ServiceRegistry
+					// charger la classe et la déclarer au ServiceRegistry
+					ServiceRegistry.addService(classeName);
+
+					System.out.println(ServiceRegistry.staticToString());
 				} catch (Exception e) {
 					System.out.println(e);
 				}
