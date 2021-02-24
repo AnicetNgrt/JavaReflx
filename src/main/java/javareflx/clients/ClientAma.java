@@ -37,6 +37,6 @@ public class ClientAma extends Client {
 
     @Override
     protected void onServerAsyncMessage(String message) {
-
+        System.out.println(message);
     }
 }

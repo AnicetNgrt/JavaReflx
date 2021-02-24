@@ -28,7 +28,7 @@ public abstract class Client implements Runnable {
 
             while(socket.isConnected()) {
                 if(serverMessage.startsWith("NOREPLY")) {
-                    serverMessage.substring("NOREPLY".length());
+                    serverMessage = serverMessage.substring("NOREPLY".length());
                     onServerAsyncMessage(serverMessage);
                 } else {
                     onServerMessage(serverMessage);
