@@ -32,7 +32,6 @@ public class ServiceRegistry {
 		}
 		// si non conforme --> exception avec message clair
 		// si conforme, ajout au vector
-
 	}
 	
 // renvoie la classe de service (numService -1)	
@@ -49,8 +48,11 @@ public class ServiceRegistry {
 // liste les activités présentes
 	public static String staticToString() {
 		StringBuilder result = new StringBuilder("Activités présentes :");
+		int index = 1;
 		for (Class<?> c:servicesClasses){
 			result.append("\n");
+			result.append(index++);
+			result.append(" ");
 			result.append(c.getName());
 		}
 		return result.toString();
