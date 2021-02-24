@@ -28,13 +28,13 @@ class ServiceAma extends Service {
 				e.printStackTrace();
 			}
 		}catch (InstanceNotFoundException e){
-			sendMessage(e.getMessage() + "\n" + e);
+			sendMessage(e.getMessage() + "\\n" + e);
 		}
 	}
 
 	@Override
 	protected void onStart() {
-		sendMessage(ServiceRegistry.staticToString()+"\n##Tapez le numéro de service désiré :");
+		sendMessage(ServiceRegistry.staticToString()+"\\n##Tapez le numéro de service désiré :");
 		receive();
 	}
 }
