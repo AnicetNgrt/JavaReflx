@@ -22,7 +22,7 @@ public class ServiceRegistry {
 		try{
 			Class<?> c = cl.loadClass(serviceName);
 
-			if (c.getSuperclass() == Service.class) {
+			if (c.getSuperclass() != Service.class) {
 				throw new ClassNotExtendsException("La classe n'extends pas Service");
 			}
 			servicesClasses.add(c);
