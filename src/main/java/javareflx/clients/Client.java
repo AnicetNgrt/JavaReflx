@@ -61,7 +61,7 @@ public abstract class Client implements Runnable {
 
     public void send(String message) {
         try {
-            serverout.write(message);
+            serverout.write(message+"\n");
             serverout.flush();
         } catch (IOException e) {
             e.printStackTrace();
