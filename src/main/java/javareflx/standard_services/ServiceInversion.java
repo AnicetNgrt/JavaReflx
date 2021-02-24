@@ -8,6 +8,10 @@ import javareflx.bri.services.Session;
 // rien à ajouter ici
 public class ServiceInversion extends Service {
 
+	public ServiceInversion() {
+		super();
+	}
+
 	public ServiceInversion(Socket socket) {
 		super(socket, new Session());
 	}
