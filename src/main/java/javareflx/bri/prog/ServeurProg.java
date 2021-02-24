@@ -22,8 +22,9 @@ public class ServeurProg implements Runnable {
 	// qui va la traiter.
 	public void run() {
 		try {
-			while(true)
+			while(true) {
 				new Thread(new ServiceProg(listen_socket.accept())).start();
+			}
 		}
 		catch (IOException e) {
 			try {this.listen_socket.close();} catch (IOException e1) {}

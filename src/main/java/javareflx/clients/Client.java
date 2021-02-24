@@ -20,9 +20,9 @@ public abstract class Client implements Runnable {
         onStart();
         try {
             socket = new Socket(endpoint, port);
-            onConnection();
             serverout = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             serverin = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            onConnection();
 
             String serverMessage = receive();
 
@@ -48,10 +48,11 @@ public abstract class Client implements Runnable {
         return socket.isConnected();
     }
 
-    private String receive() {
+    protected String receive() {
         String serverMessage  = "";
         try {
             serverMessage = serverin.readLine();
+            serverMessage = serverMessage.replace("\\n","\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,6 +62,7 @@ public abstract class Client implements Runnable {
     public void send(String message) {
         try {
             serverout.write(message);
+            serverout.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

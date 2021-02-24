@@ -23,8 +23,10 @@ public abstract class Service implements Runnable {
     @Override
     public void run() {
         if(isInitiated() && isConnected()) {
+            System.out.println("1");
             onStart();
         }
+        System.out.println("2");
     }
 
     public void init(Socket socket, Session session) {
@@ -61,7 +63,8 @@ public abstract class Service implements Runnable {
 
     protected void sendMessage(String message) {
         try {
-            out.write(message);
+            out.write(message+"\n");
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

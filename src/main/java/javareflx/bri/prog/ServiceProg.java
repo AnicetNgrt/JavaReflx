@@ -34,7 +34,7 @@ class ServiceProg extends Service {
 
 	@Override
 	protected void onStart() {
-		sendMessage(ServiceRegistry.staticToString()+"\n##Tapez le numéro de service désiré :");
+		sendMessage(ServiceRegistry.staticToString()+"\\n##Tapez le numéro de service désiré :");
 		receive();
 	}
 }

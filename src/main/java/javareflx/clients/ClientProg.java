@@ -9,7 +9,7 @@ public class ClientProg extends Client {
     private final Scanner sc;
 
     public static void main(String[] args) {
-        new Thread(new ClientAma(ENDPOINT, PORT)).start();
+        new Thread(new ClientProg(ENDPOINT, PORT)).start();
     }
 
     public ClientProg(String endpoint, int port) {
