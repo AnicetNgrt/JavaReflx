@@ -23,11 +23,11 @@ public class ServeurBRi implements Runnable {
 	public void run() {
 		try {
 			while(true)
-				new ServiceBRi(listen_socket.accept()).start();
+				new Thread(new ServiceBRi(listen_socket.accept())).start();
 		}
-		catch (IOException e) { 
+		catch (IOException e) {
 			try {this.listen_socket.close();} catch (IOException e1) {}
-			System.err.println("Pb sur le port d'�coute :"+e);
+			System.err.println("Pb sur le port d'écoute :"+e);
 		}
 	}
 
