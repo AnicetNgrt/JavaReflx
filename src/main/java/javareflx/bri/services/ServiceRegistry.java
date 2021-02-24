@@ -52,6 +52,7 @@ public class ServiceRegistry {
 		for (Class<?> c:servicesClasses){
 			result.append("\n");
 			result.append(index++);
+			result.append(" ");
 			result.append(c.getName());
 		}
 		return result.toString();
