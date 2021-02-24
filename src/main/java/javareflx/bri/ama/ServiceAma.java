@@ -9,8 +9,13 @@ import java.net.*;
 
 class ServiceAma extends Service {
 
+	private static int compteur = 0;
+	private final int numSession;
+
 	ServiceAma(Socket socket) {
 		super(socket, new Session());
+		numSession = ++compteur;
+		System.out.println("Session " + numSession + "AMA démarré.");
 	}
 
 	@Override
