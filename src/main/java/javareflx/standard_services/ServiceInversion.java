@@ -34,6 +34,7 @@ public class ServiceInversion extends Service {
 	protected void onClientMessage(String message) {
 		String invLine = new String (new StringBuffer(message).reverse());
 		sendMessage(invLine + "\\nFinished. Press enter to continue.");
+		receive();
 		finalize();
 	}
 }
