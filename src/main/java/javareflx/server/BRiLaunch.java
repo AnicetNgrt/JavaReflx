@@ -4,6 +4,7 @@ import java.net.URLClassLoader;
 import java.util.Scanner;
 
 import javareflx.bri.ama.ServeurAma;
+import javareflx.bri.prog.ServeurProg;
 import javareflx.bri.services.ServiceRegistry;
 
 public class BRiLaunch {
@@ -30,7 +31,7 @@ public class BRiLaunch {
 		System.out.println("A tout instant, en tapant le nom de la classe, vous pouvez l'intégrer");
 		System.out.println("Les clients se connectent au serveur 3000 pour lancer une activité");
 		
-		//new Thread(new ServeurAma(PORT_PROG)).start();
+		new Thread(new ServeurProg(PORT_PROG)).start();
 		new Thread(new ServeurAma(PORT_AMA)).start();
 		
 		while (true){
