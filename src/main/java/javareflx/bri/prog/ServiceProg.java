@@ -26,7 +26,7 @@ class ServiceProg extends Service {
 		String serverMessage = "none";
 
 		try {
-			String[] parts = message.split("\\+s");
+			String[] parts = message.split("\\s+");
 			if(parts.length < 1) {
 				throw new ArgumentsMissingException("missing a command");
 			}
@@ -58,13 +58,14 @@ class ServiceProg extends Service {
 					throw new CommandNotFoundException("unknown command "+command);
 			}
 		} catch(Exception e) {
-			serverMessage = "error";
+			serverMessage = e.getMessage();
 		}
 		sendMessage(serverMessage);
 		receive();
 	}
 
 	private String commandRegister(String[] args) throws ArgumentsMissingException, InstanceCreationFailedException {
+		System.out.println(Arrays.toString(args));
 		if(args.length < 2) throw new ArgumentsMissingException("missing login or password");
 		Programmer account = ProgrammerRegistry.addProgrammer(args[0], args[1]);
 		((ServiceProgSession) getSession()).setAccount(account);
@@ -75,7 +76,7 @@ class ServiceProg extends Service {
 		if(args.length < 2) throw new ArgumentsMissingException("missing login or password");
 		try {
 			Programmer account = ProgrammerRegistry.getProgrammer(args[0]);
-			account.authenticate(args[1]);
+			if(!account.authenticate(args[1])) throw new AuthenticationFailedException("wrong password");
 			((ServiceProgSession) getSession()).setAccount(account);
 		} catch(Exception e){
 			throw new AuthenticationFailedException("either password or login is wrong");

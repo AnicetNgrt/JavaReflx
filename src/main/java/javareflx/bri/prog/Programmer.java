@@ -24,14 +24,13 @@ public class Programmer {
     }
 
     public boolean authenticate(String password) {
-        return password == this.password;
+        return password.equals(this.password);
     }
 
     public ClassLoader getClassLoader() throws MalformedURLException {
         String fileDirURL = "ftp://"+ftpUrl;
-        ClassLoader cl = new URLClassLoader(new URL[] { // ftp://username:password@speedtest.tele2.net/classes/
+        return new URLClassLoader(new URL[] { // ftp://username:password@speedtest.tele2.net/classes/
                 new URL(fileDirURL)
         });
-        return cl;
     }
 }
