@@ -26,10 +26,11 @@ class ServiceAma extends Service {
 		try {
 			Class<?> serviceClass = ServiceRegistry.getServiceClass(choix);
 			try {
-				System.out.println(serviceClass);
 				Service service = (Service) serviceClass.newInstance();
 				service.init(getSocket(), getSession());
+				service.setCallback(this);
 				new Thread(service).start();
+				return;
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {

@@ -8,6 +8,7 @@ import java.net.Socket;
 public abstract class Service implements Runnable {
     private Socket socket;
     private Session session;
+    private Service callback = null;
 
     private BufferedWriter out;
     private BufferedReader in;
@@ -78,12 +79,21 @@ public abstract class Service implements Runnable {
         onClientMessage(message);
     }
 
+    @Override
     protected void finalize() {
         try {
-            socket.close();
+            if (callback != null){
+                callback.onStart();
+            }else {
+                socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setCallback(Service callback) {
+        this.callback = callback;
     }
 
     protected abstract void onClientMessage(String message);
