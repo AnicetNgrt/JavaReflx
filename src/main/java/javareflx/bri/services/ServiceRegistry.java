@@ -52,7 +52,7 @@ public class ServiceRegistry {
 		StringBuilder result = new StringBuilder("Activités présentes :");
 		int index = 1;
 		for (Class<?> c:servicesClasses){
-			result.append("\n");
+			result.append("\\n");
 			result.append(index++);
 			result.append(" ");
 			result.append(c.getName());

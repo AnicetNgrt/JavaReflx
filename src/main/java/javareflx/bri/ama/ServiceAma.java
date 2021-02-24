@@ -21,9 +21,12 @@ class ServiceAma extends Service {
 	@Override
 	protected void onClientMessage(String message) {
 		int choix = Integer.parseInt(message);
+		System.out.println(message);
+		String reply = "none";
 		try {
 			Class<?> serviceClass = ServiceRegistry.getServiceClass(choix);
 			try {
+				System.out.println(serviceClass);
 				Service service = (Service) serviceClass.newInstance();
 				service.init(getSocket(), getSession());
 				new Thread(service).start();
@@ -32,14 +35,17 @@ class ServiceAma extends Service {
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			}
+			reply = ServiceRegistry.staticToString() + "\\n##Tapez le numéro de service désiré :";
 		}catch (InstanceNotFoundException e){
-			sendMessage(e.getMessage() + "\\n" + e);
+			reply = e.getMessage();
 		}
+		sendMessage(reply);
+		receive();
 	}
 
 	@Override
 	protected void onStart() {
-		sendMessage(ServiceRegistry.staticToString()+"\\n##Tapez le numéro de service désiré :");
+		sendMessage(ServiceRegistry.staticToString() + "\\n##Tapez le numéro de service désiré :");
 		receive();
 	}
 }
