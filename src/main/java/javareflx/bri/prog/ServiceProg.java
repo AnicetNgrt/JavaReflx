@@ -6,6 +6,7 @@ import javareflx.bri.services.ServiceRegistry;
 import javareflx.bri.services.Session;
 
 import java.net.Socket;
+import java.util.stream.IntStream;
 
 class ServiceProg extends Service {
 
@@ -16,8 +17,18 @@ class ServiceProg extends Service {
 	@Override
 	protected void onClientMessage(String message) {
 		String[] parts = message.split("\\+s");
+		String command = parts[0];
+		String[] args = IntStream.range(1, parts.length)
+				.mapToObj(i -> parts[i])
+				.toArray(String[]::new);
+
 		switch(parts[0]) {
-			case "": break;
+			case "register": break;
+			case "login": break;
+			case "setftp": break;
+			case "install": break;
+			case "update": break;
+			case "uninstall": break;
 		}
 		receive();
 	}
