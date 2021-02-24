@@ -1,6 +1,7 @@
 package javareflx.bri.services;
 
 import javareflx.bri.exceptions.ClassNotExtendsException;
+import javareflx.bri.exceptions.InstanceNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,11 @@ public class ServiceRegistry {
 		try{
 			Class<?> c = cl.loadClass(serviceName);
 
+			if () {
+				throw new ClassNotExtendsException("La classe n'extends pas Service");
+			}
 			servicesClasses.add(c);
-			throw new ClassNotExtendsException("La classe n'extends pas Service"); //non fini
+
 		} catch (ClassNotFoundException e){
 			System.err.println("La classe " + serviceName + "est introuvable.");
 			e.printStackTrace();
@@ -35,13 +39,11 @@ public class ServiceRegistry {
 	}
 	
 // renvoie la classe de service (numService -1)	
-	public static Class<?> getServiceClass(int numService) {
+	public static Class<?> getServiceClass(int numService) throws InstanceNotFoundException {
 		try{
 			return servicesClasses.get(numService - 1);
 		}catch (IndexOutOfBoundsException e){
-			System.err.println("Ce numéro de service est inexistant");
-			e.printStackTrace();
-			return null;
+			throw new InstanceNotFoundException("Ce numéro de service est inexistant");
 		}
 	}
 	

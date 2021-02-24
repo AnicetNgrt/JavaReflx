@@ -33,7 +33,9 @@ public class ServeurAma implements Runnable {
 
 	 // restituer les ressources --> finalize
 	protected void finalize() throws Throwable {
-		try {this.listen_socket.close();} catch (IOException e1) {}
+		try {
+			this.listen_socket.close();
+		} catch (IOException e1) {}
 	}
 
 	// lancement du serveur
