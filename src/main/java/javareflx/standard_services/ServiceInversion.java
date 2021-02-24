@@ -3,7 +3,6 @@ package javareflx.standard_services;
 import java.net.*;
 
 import javareflx.bri.services.Service;
-import javareflx.bri.services.Session;
 
 // rien à ajouter ici
 public class ServiceInversion extends Service {
@@ -13,16 +12,8 @@ public class ServiceInversion extends Service {
 	}
 
 	public ServiceInversion(Socket socket) {
-		super(socket, new Session());
+		super(socket);
 	}
-
-	public ServiceInversion(Socket socket, Session session) {
-		super(socket, session);
-	}
-
-	/*public static String toStringue() {
-		return "Inversion de texte";
-	}*/
 
 	@Override
 	protected void onStart() {

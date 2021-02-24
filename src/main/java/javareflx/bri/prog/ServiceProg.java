@@ -2,17 +2,16 @@ package javareflx.bri.prog;
 
 import javareflx.bri.exceptions.*;
 import javareflx.bri.services.Service;
-import javareflx.bri.services.ServiceRegistry;
-import javareflx.bri.services.Session;
 
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.stream.IntStream;
 
 class ServiceProg extends Service {
 
+	private Programmer programmer;
+
 	ServiceProg(Socket socket) {
-		super(socket, new ServiceProgSession());
+		super(socket);
 	}
 
 	@Override
@@ -68,7 +67,7 @@ class ServiceProg extends Service {
 		System.out.println(Arrays.toString(args));
 		if(args.length < 2) throw new ArgumentsMissingException("missing login or password");
 		Programmer account = ProgrammerRegistry.addProgrammer(args[0], args[1]);
-		((ServiceProgSession) getSession()).setAccount(account);
+		programmer = account;
 		return "ok "+args[0];
 	}
 
@@ -77,7 +76,7 @@ class ServiceProg extends Service {
 		try {
 			Programmer account = ProgrammerRegistry.getProgrammer(args[0]);
 			if(!account.authenticate(args[1])) throw new AuthenticationFailedException("wrong password");
-			((ServiceProgSession) getSession()).setAccount(account);
+			programmer = account;
 		} catch(Exception e){
 			throw new AuthenticationFailedException("either password or login is wrong");
 		}
@@ -87,7 +86,7 @@ class ServiceProg extends Service {
 	private String commandSetFtp(String[] args) throws ArgumentsMissingException, InstanceCreationFailedException {
 		if(args.length < 1) throw new ArgumentsMissingException("ftp url");
 		Programmer account = ProgrammerRegistry.addProgrammer(args[0], args[1]);
-		((ServiceProgSession) getSession()).setAccount(account);
+		programmer = account;
 		return "ok "+args[0];
 	}
 }

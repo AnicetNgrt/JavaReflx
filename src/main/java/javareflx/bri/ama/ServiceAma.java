@@ -3,7 +3,6 @@ package javareflx.bri.ama;
 import javareflx.bri.exceptions.InstanceNotFoundException;
 import javareflx.bri.services.Service;
 import javareflx.bri.services.ServiceRegistry;
-import javareflx.bri.services.Session;
 
 import java.net.*;
 
@@ -13,7 +12,7 @@ class ServiceAma extends Service {
 	private final int numSession;
 
 	ServiceAma(Socket socket) {
-		super(socket, new Session());
+		super(socket);
 		numSession = ++compteur;
 		System.out.println("Session " + numSession + "AMA démarré.");
 	}
@@ -27,13 +26,11 @@ class ServiceAma extends Service {
 			Class<?> serviceClass = ServiceRegistry.getServiceClass(choix);
 			try {
 				Service service = (Service) serviceClass.newInstance();
-				service.init(getSocket(), getSession());
+				service.init(getSocket());
 				service.setCallback(this);
 				new Thread(service).start();
 				return;
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
+			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
 			reply = ServiceRegistry.staticToString() + "\\n##Tapez le numéro de service désiré :";

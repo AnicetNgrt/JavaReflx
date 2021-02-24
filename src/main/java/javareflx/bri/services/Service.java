@@ -7,7 +7,6 @@ import java.net.Socket;
 
 public abstract class Service implements Runnable {
     private Socket socket;
-    private Session session;
     private Service callback = null;
 
     private BufferedWriter out;
@@ -17,8 +16,8 @@ public abstract class Service implements Runnable {
 
     public Service() {}
 
-    public Service(Socket socket, Session session) {
-        init(socket, session);
+    public Service(Socket socket) {
+        init(socket);
     }
 
     @Override
@@ -28,9 +27,8 @@ public abstract class Service implements Runnable {
         }
     }
 
-    public void init(Socket socket, Session session) {
+    public void init(Socket socket) {
         this.socket = socket;
-        this.session = session;
         initIO();
         isInitiated = true;
     }
@@ -42,10 +40,6 @@ public abstract class Service implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public Session getSession() {
-        return session;
     }
 
     public Socket getSocket() {
