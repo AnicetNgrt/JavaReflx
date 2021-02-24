@@ -1,6 +1,6 @@
-package javareflx.bri;
+package javareflx.bri.services;
 
-import javareflx.bri.Exception.ClassNotExtendsException;
+import javareflx.bri.exceptions.ClassNotExtendsException;
 
 import java.util.ArrayList;
 import java.util.List;

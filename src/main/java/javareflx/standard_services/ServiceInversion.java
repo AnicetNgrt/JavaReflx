@@ -2,8 +2,8 @@ package javareflx.standard_services;
 
 import java.net.*;
 
-import javareflx.bri.Service;
-import javareflx.bri.Session;
+import javareflx.bri.services.Service;
+import javareflx.bri.services.Session;
 
 // rien à ajouter ici
 public class ServiceInversion extends Service {

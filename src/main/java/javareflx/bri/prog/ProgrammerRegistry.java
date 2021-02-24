@@ -1,4 +1,4 @@
-package javareflx.bri;
+package javareflx.bri.prog;
 
 public class ProgrammerRegistry {
 }

@@ -1,4 +1,4 @@
-package javareflx.bri;
+package javareflx.bri.prog;
 
 import java.net.MalformedURLException;
 import java.net.URL;

@@ -3,8 +3,8 @@ package javareflx.server;
 import java.net.URLClassLoader;
 import java.util.Scanner;
 
-import javareflx.bri.ServeurAma;
-import javareflx.bri.ServiceRegistry;
+import javareflx.bri.ama.ServeurAma;
+import javareflx.bri.services.ServiceRegistry;
 
 public class BRiLaunch {
 	private final static int PORT_PROG = 4000;

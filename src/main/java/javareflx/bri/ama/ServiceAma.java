@@ -1,4 +1,8 @@
-package javareflx.bri;
+package javareflx.bri.ama;
+
+import javareflx.bri.services.Service;
+import javareflx.bri.services.ServiceRegistry;
+import javareflx.bri.services.Session;
 
 import java.net.*;
 
