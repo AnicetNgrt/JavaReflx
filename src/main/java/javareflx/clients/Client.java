@@ -27,7 +27,12 @@ public abstract class Client implements Runnable {
             String serverMessage = receive();
 
             while(socket.isConnected()) {
-                onServerMessage(serverMessage);
+                if(serverMessage.startsWith("NOREPLY")) {
+                    serverMessage.substring("NOREPLY".length());
+                    onServerAsyncMessage(serverMessage);
+                } else {
+                    onServerMessage(serverMessage);
+                }
                 serverMessage = receive();
             }
 
@@ -73,4 +78,6 @@ public abstract class Client implements Runnable {
     protected abstract void onConnection();
 
     protected abstract void onServerMessage(String message);
+
+    protected abstract void onServerAsyncMessage(String message);
 }

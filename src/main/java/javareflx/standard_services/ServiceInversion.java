@@ -33,7 +33,7 @@ public class ServiceInversion extends Service {
 	@Override
 	protected void onClientMessage(String message) {
 		String invLine = new String (new StringBuffer(message).reverse());
-		sendMessage(invLine + "\\nFinished. Press enter to continue.");
+		sendMessage("NOREPLY" + invLine + "\\nFinished. Press enter to continue.");
 		finalize();
 	}
 }

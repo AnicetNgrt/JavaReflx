@@ -34,4 +34,9 @@ public class ClientAma extends Client {
         System.out.print("> ");
         this.send(sc.nextLine());
     }
+
+    @Override
+    protected void onServerAsyncMessage(String message) {
+
+    }
 }
