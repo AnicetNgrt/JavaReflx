@@ -3,12 +3,12 @@ package javareflx.server;
 import java.net.URLClassLoader;
 import java.util.Scanner;
 
-import javareflx.bri.ServeurBRi;
+import javareflx.bri.ServeurAma;
 import javareflx.bri.ServiceRegistry;
-import javareflx.standard_services.ServiceInversion;
 
 public class BRiLaunch {
-	private final static int PORT_SERVICE = 3000;
+	private final static int PORT_PROG = 4000;
+	private final static int PORT_AMA = 3000;
 	
 	public static void main(String[] args) {
 		@SuppressWarnings("resource")
@@ -30,13 +30,14 @@ public class BRiLaunch {
 		System.out.println("A tout instant, en tapant le nom de la classe, vous pouvez l'intégrer");
 		System.out.println("Les clients se connectent au serveur 3000 pour lancer une activité");
 		
-		new Thread(new ServeurBRi(PORT_SERVICE)).start();
+		//new Thread(new ServeurAma(PORT_PROG)).start();
+		new Thread(new ServeurAma(PORT_AMA)).start();
 		
 		while (true){
 				try {
-					String classeName = clavier.next();
+					String className = clavier.next();
 					// charger la classe et la déclarer au ServiceRegistry
-					ServiceRegistry.addService(classeName);
+					ServiceRegistry.addService(ClassLoader.getSystemClassLoader(), className);
 
 					System.out.println(ServiceRegistry.staticToString());
 				} catch (Exception e) {

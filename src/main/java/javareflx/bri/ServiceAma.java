@@ -2,9 +2,9 @@ package javareflx.bri;
 
 import java.net.*;
 
-class ServiceBRi extends Service {
+class ServiceAma extends Service {
 
-	ServiceBRi(Socket socket) {
+	ServiceAma(Socket socket) {
 		super(socket, new Session());
 	}
 

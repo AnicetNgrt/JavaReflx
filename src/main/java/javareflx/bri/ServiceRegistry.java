@@ -16,14 +16,14 @@ public class ServiceRegistry {
 	private static List<Class<?>> servicesClasses;
 
 // ajoute une classe de service après contrôle de la norme BLTi
-	public static void addService(String serviceName) {
+	public static void addService(ClassLoader cl, String serviceName) {
 		// vérifier la conformité par introspection
 		try{
-			Class<?> c = Class.forName(serviceName);
+			Class<?> c = cl.loadClass(serviceName);
 
 			servicesClasses.add(c);
 			throw new ClassNotExtendsException("La classe n'extends pas Service"); //non fini
-		}catch (ClassNotFoundException e){
+		} catch (ClassNotFoundException e){
 			System.err.println("La classe " + serviceName + "est introuvable.");
 			e.printStackTrace();
 

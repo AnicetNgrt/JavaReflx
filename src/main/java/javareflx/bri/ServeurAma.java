@@ -5,11 +5,11 @@ import java.io.*;
 import java.net.*;
 
 
-public class ServeurBRi implements Runnable {
+public class ServeurAma implements Runnable {
 	private ServerSocket listen_socket;
 	
 	// Cree un serveur TCP - objet de la classe ServerSocket
-	public ServeurBRi(int port) {
+	public ServeurAma(int port) {
 		try {
 			listen_socket = new ServerSocket(port);
 		} catch (IOException e) {
@@ -23,7 +23,7 @@ public class ServeurBRi implements Runnable {
 	public void run() {
 		try {
 			while(true)
-				new Thread(new ServiceBRi(listen_socket.accept())).start();
+				new Thread(new ServiceAma(listen_socket.accept())).start();
 		}
 		catch (IOException e) {
 			try {this.listen_socket.close();} catch (IOException e1) {}
