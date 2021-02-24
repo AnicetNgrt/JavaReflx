@@ -15,26 +15,16 @@ class ServiceProg extends Service {
 
 	@Override
 	protected void onClientMessage(String message) {
-		int choix = Integer.parseInt(message);
-		try {
-			Class<?> serviceClass = ServiceRegistry.getServiceClass(choix);
-			try {
-				Service service = (Service) serviceClass.newInstance();
-				service.init(getSocket(), getSession());
-				new Thread(service).start();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}catch (InstanceNotFoundException e){
-			sendMessage(e.getMessage() + "\n" + e);
+		String[] parts = message.split("\\+s");
+		switch(parts[0]) {
+			case "": break;
 		}
+		receive();
 	}
 
 	@Override
 	protected void onStart() {
-		sendMessage(ServiceRegistry.staticToString()+"\\n##Tapez le numéro de service désiré :");
+		sendMessage("Welcome to the programmer service. \\nIf you're there, we hope you know what you're doing.");
 		receive();
 	}
 }
