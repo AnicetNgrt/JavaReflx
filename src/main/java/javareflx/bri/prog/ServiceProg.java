@@ -2,8 +2,11 @@ package javareflx.bri.prog;
 
 import javareflx.bri.exceptions.*;
 import javareflx.bri.services.Service;
+import javareflx.bri.services.ServiceRegistry;
 
+import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.URL;
 import java.util.Arrays;
 
 class ServiceProg extends Service {
@@ -45,18 +48,19 @@ class ServiceProg extends Service {
 					serverMessage = commandSetFtp(args);
 					break;
 				case "install":
-					serverMessage = commandRegister(args);
+					serverMessage = commandInstall(args);
 					break;
 				case "update":
-					serverMessage = commandRegister(args);
+					serverMessage = commandUpdate(args);
 					break;
 				case "uninstall":
-					serverMessage = commandRegister(args);
+					serverMessage = commandUninstall(args);
 					break;
 				default:
 					throw new CommandNotFoundException("unknown command "+command);
 			}
 		} catch(Exception e) {
+			//e.printStackTrace();
 			serverMessage = e.getMessage();
 		}
 		sendMessage(serverMessage);
@@ -64,10 +68,8 @@ class ServiceProg extends Service {
 	}
 
 	private String commandRegister(String[] args) throws ArgumentsMissingException, InstanceCreationFailedException {
-		System.out.println(Arrays.toString(args));
 		if(args.length < 2) throw new ArgumentsMissingException("missing login or password");
-		Programmer account = ProgrammerRegistry.addProgrammer(args[0], args[1]);
-		programmer = account;
+		programmer = ProgrammerRegistry.addProgrammer(args[0], args[1]);
 		return "ok "+args[0];
 	}
 
@@ -83,10 +85,56 @@ class ServiceProg extends Service {
 		return "ok "+args[0];
 	}
 
-	private String commandSetFtp(String[] args) throws ArgumentsMissingException, InstanceCreationFailedException {
-		if(args.length < 1) throw new ArgumentsMissingException("ftp url");
-		Programmer account = ProgrammerRegistry.addProgrammer(args[0], args[1]);
-		programmer = account;
-		return "ok "+args[0];
+	private String commandSetFtp(String[] args) throws ArgumentsMissingException, AuthenticationFailedException, NotCertifiedException {
+		if(args.length < 1) throw new ArgumentsMissingException("missing ftp url");
+		if(programmer == null) throw new AuthenticationFailedException("not logged in");
+
+		try {
+			programmer.setFtpUrl(args[0]);
+		} catch(MalformedURLException e) {
+			throw new NotCertifiedException("ftp url malformed: "+e.getMessage());
+		}
+		if(!programmer.isCertified()) {
+			throw new NotCertifiedException("certification of your ftp URL failed");
+		}
+
+		return "ok you are now certified";
+	}
+
+	private String commandInstall(String[] args) throws ArgumentsMissingException, AuthenticationFailedException, NotCertifiedException, InvalidServiceException {
+		if(args.length < 1) throw new ArgumentsMissingException("missing class name");
+		if(programmer == null) throw new AuthenticationFailedException("not logged in");
+		if(!programmer.isCertified()) throw new NotCertifiedException("not certified, register a valid ftp URL first");
+
+		try {
+			ServiceRegistry.addService(programmer.getDefaultClassLoader(), args[0]);
+		} catch (MalformedURLException e) {
+			throw new NotCertifiedException("not certified, register a valid ftp URL first");
+		}
+
+		return "ok installed";
+	}
+
+	private String commandUninstall(String[] args) throws ArgumentsMissingException, AuthenticationFailedException, NotCertifiedException, InvalidServiceException {
+		if(args.length < 1) throw new ArgumentsMissingException("missing class name");
+		if(programmer == null) throw new AuthenticationFailedException("not logged in");
+		if(!programmer.isCertified()) throw new NotCertifiedException("not certified, register a valid ftp URL first");
+
+		try {
+			ServiceRegistry.addService(programmer.getDefaultClassLoader(), args[0]);
+		} catch (MalformedURLException e) {
+			throw new NotCertifiedException("not certified, register a valid ftp URL first");
+		}
+
+		return "ok installed";
+	}
+
+	private String commandUpdate(String[] args) throws ArgumentsMissingException, AuthenticationFailedException, NotCertifiedException, InvalidServiceException {
+		try {
+			commandInstall(args);
+		} catch(Exception e) {
+			throw e;
+		}
+		return "ok updated";
 	}
 }

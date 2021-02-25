@@ -23,21 +23,12 @@ class ServiceAma extends Service {
 		System.out.println(message);
 		String reply = "none";
 		try {
-			Class<?> serviceClass = ServiceRegistry.getServiceClass(choix);
-			try {
-				Service service = (Service) serviceClass.newInstance();
-				service.init(getSocket());
-				service.setCallback(this);
-				new Thread(service).start();
-				return;
-			} catch (InstantiationException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			reply = ServiceRegistry.staticToString() + "\\n##Tapez le numéro de service désiré :";
+			ServiceRegistry.getService(choix).startWith(getSocket(), this);
+			return;
 		}catch (InstanceNotFoundException e){
 			reply = e.getMessage();
 		}
-		sendMessage(reply);
+		sendMessage(reply + "\\n##Tapez le numéro de service désiré :");
 		receive();
 	}
 
