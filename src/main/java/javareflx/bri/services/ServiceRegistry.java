@@ -1,6 +1,6 @@
 package javareflx.bri.services;
 
-import javareflx.bri.exceptions.ClassNotExtendsException;
+import javareflx.bri.exceptions.InvalidServiceException;
 import javareflx.bri.exceptions.InstanceNotFoundException;
 
 import java.util.ArrayList;
@@ -12,30 +12,28 @@ public class ServiceRegistry {
 	// un Vector pour cette gestion est pratique
 
 	static {
+		specs = new ServiceSpecsCheckerV1();
 		servicesClasses = new ArrayList<>();
 	}
+
+	private static ServiceSpecsChecker specs;
 	private static List<Class<?>> servicesClasses;
 
 // ajoute une classe de service après contrôle de la norme BLTi
-	public static void addService(ClassLoader cl, String serviceName) {
+	public static void addService(ClassLoader cl, String serviceName) throws InvalidServiceException {
 		// vérifier la conformité par introspection
 		try{
 			Class<?> c = cl.loadClass(serviceName);
 
-			if (c.getSuperclass() != Service.class) {
-				throw new ClassNotExtendsException("La classe n'extends pas Service");
+			if (!specs.isCompliant(c)) {
+				throw new InvalidServiceException("Service "+serviceName+" is not compliant");
 			}
+
 			servicesClasses.add(c);
 
 		} catch (ClassNotFoundException e){
-			System.err.println("La classe " + serviceName + "est introuvable.");
-			e.printStackTrace();
-
-		}catch (ClassNotExtendsException e){
-			e.printStackTrace();
+			throw new InvalidServiceException("Service "+serviceName+" cannot be found");
 		}
-		// si non conforme --> exception avec message clair
-		// si conforme, ajout au vector
 	}
 	
 // renvoie la classe de service (numService -1)	
@@ -43,13 +41,13 @@ public class ServiceRegistry {
 		try{
 			return servicesClasses.get(numService - 1);
 		}catch (IndexOutOfBoundsException e){
-			throw new InstanceNotFoundException("Ce numéro de service est inexistant");
+			throw new InstanceNotFoundException("Unknown service id "+numService);
 		}
 	}
 	
 // liste les activités présentes
 	public static String staticToString() {
-		StringBuilder result = new StringBuilder("Activités présentes :");
+		StringBuilder result = new StringBuilder("Available activities :");
 		int index = 1;
 		for (Class<?> c:servicesClasses){
 			result.append("\\n");
