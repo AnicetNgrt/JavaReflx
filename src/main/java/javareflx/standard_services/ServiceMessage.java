@@ -17,6 +17,7 @@ public class ServiceMessage extends Service {
 
     private static HashMap<String, Pair<String, ArrayList<String>>> messageAccounts;
     private String username = null;
+    private boolean lastMessageSend = true;
 
     private Steps steps;
 
@@ -59,22 +60,41 @@ public class ServiceMessage extends Service {
                     }
                 }else {
                     messageAccounts.put(username, new Pair<>(password, new ArrayList<>()));
-                    sendMessage("Votre compte à bien été créé" + this.getMessages());
+                    sendMessage("Votre compte à bien été créé\\n" + this.getMessages());
                     steps = Steps.MESSAGE;
                 }
                 receive();
                 break;
             case MESSAGE:
+                lastMessageSend = newMessage(message);
                 sendMessage(getMessages());
                 receive();
                 break;
         }
     }
 
+    private boolean newMessage(String message){
+        if (message.length() == 0)
+            return false;
+        String[] dest = message.split(" ");
+        if (dest.length == 0){
+            return false;
+        }
+        message = message.replaceFirst(dest[0] + " ","");
+        if (messageAccounts.containsKey(dest[0])){
+            messageAccounts.get(dest[0]).getValue().add(username + " : " + message);
+        }
+        return true;
+    }
+
     private String getMessages(){
         ArrayList<String> messagesList = messageAccounts.get(username).getValue();
+        StringBuilder sb = new StringBuilder();
+        if (!this.lastMessageSend){
+            sb.append("Le message ne peut pas être envoyé\\n");
+            this.lastMessageSend = true;
+        }
         if (messagesList.size() > 0){
-            StringBuilder sb = new StringBuilder();
             sb.append("Vous avez ");
             sb.append(messagesList.size());
             sb.append(" nouveau(x) message(s) :");
@@ -82,11 +102,12 @@ public class ServiceMessage extends Service {
                 sb.append("\\n");
                 sb.append(message);
             }
+            messageAccounts.get(username).getValue().clear();
             sb.append("\\nEntrez votre message :");
-            return sb.toString();
         }else {
-            return "Aucun nouveau message.\\nEntrez votre message :";
+            sb.append("Aucun nouveau message.\\nEntrez votre message :");
         }
+        return sb.toString();
     }
 }
 
