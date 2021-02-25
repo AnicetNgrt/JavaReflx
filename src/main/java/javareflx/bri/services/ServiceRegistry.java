@@ -8,9 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ServiceRegistry {
-	// cette classe est un registre de services
-	// partagée en concurrence par les clients et les "ajouteurs" de services,
-	// un Vector pour cette gestion est pratique
 
 	static {
 		specs = new ServiceSpecsCheckerV1();
@@ -22,9 +19,8 @@ public class ServiceRegistry {
 	private static HashMap<String, InstalledService> services;
 	private static List<String> servicesNames;
 
-// ajoute une classe de service après contrôle de la norme BLTi
-	public static void addService(ClassLoader cl, String serviceName) throws InvalidServiceException {
-		// vérifier la conformité par introspection
+	public static InstalledService uninstallService(ClassLoader cl, String serviceName) throws InvalidServiceException {
+		InstalledService is = null;
 		try{
 			Class<?> c = cl.loadClass(serviceName);
 
@@ -32,28 +28,32 @@ public class ServiceRegistry {
 				throw new InvalidServiceException("Service "+serviceName+" is not compliant");
 			}
 
-			services.put(serviceName, new InstalledService(servicesNames.size(), c));
+			is = new InstalledService(c);
+			services.put(serviceName, is);
 			servicesNames.add(serviceName);
 
 		} catch (ClassNotFoundException e){
 			throw new InvalidServiceException("Service "+serviceName+" cannot be found");
 		}
+
+		return is;
 	}
 
-	public static void removeService(String serviceName) throws InvalidServiceException {
-
+	public static void uninstallService(String name) throws InstanceNotFoundException {
+		InstalledService is = services.get(name);
+		if(is == null) throw new InstanceNotFoundException("Unknown service name "+name);
+		services.remove(name);
+		servicesNames.remove(name);
 	}
-	
-// renvoie la classe de service (numService -1)	
-	public static InstalledService getService(int numService) throws InstanceNotFoundException {
+
+	public static InstalledService getService(int index) throws InstanceNotFoundException {
 		try{
-			return services.get(servicesNames.get(numService - 1));
+			return services.get(servicesNames.get(index - 1));
 		}catch (IndexOutOfBoundsException e){
-			throw new InstanceNotFoundException("Unknown service id "+numService);
+			throw new InstanceNotFoundException("Unknown service id "+index);
 		}
 	}
-	
-// liste les activités présentes
+
 	public static String staticToString() {
 		StringBuilder result = new StringBuilder("Available activities :");
 		int index = 1;
@@ -65,5 +65,4 @@ public class ServiceRegistry {
 		}
 		return result.toString();
 	}
-
 }

@@ -1,12 +1,12 @@
 package javareflx.bri.prog;
 
 import javareflx.bri.exceptions.*;
+import javareflx.bri.services.InstalledService;
 import javareflx.bri.services.Service;
 import javareflx.bri.services.ServiceRegistry;
 
 import java.net.MalformedURLException;
 import java.net.Socket;
-import java.net.URL;
 import java.util.Arrays;
 
 class ServiceProg extends Service {
@@ -107,7 +107,8 @@ class ServiceProg extends Service {
 		if(!programmer.isCertified()) throw new NotCertifiedException("not certified, register a valid ftp URL first");
 
 		try {
-			ServiceRegistry.addService(programmer.getDefaultClassLoader(), args[0]);
+			InstalledService is = ServiceRegistry.uninstallService(programmer.getDefaultClassLoader(), args[0]);
+			is.setOwner(programmer);
 		} catch (MalformedURLException e) {
 			throw new NotCertifiedException("not certified, register a valid ftp URL first");
 		}
@@ -115,14 +116,14 @@ class ServiceProg extends Service {
 		return "ok installed";
 	}
 
-	private String commandUninstall(String[] args) throws ArgumentsMissingException, AuthenticationFailedException, NotCertifiedException, InvalidServiceException {
+	private String commandUninstall(String[] args) throws ArgumentsMissingException, AuthenticationFailedException, NotCertifiedException {
 		if(args.length < 1) throw new ArgumentsMissingException("missing class name");
 		if(programmer == null) throw new AuthenticationFailedException("not logged in");
 		if(!programmer.isCertified()) throw new NotCertifiedException("not certified, register a valid ftp URL first");
 
 		try {
-			ServiceRegistry.addService(programmer.getDefaultClassLoader(), args[0]);
-		} catch (MalformedURLException e) {
+			ServiceRegistry.uninstallService(args[0]);
+		} catch (InstanceNotFoundException e) {
 			throw new NotCertifiedException("not certified, register a valid ftp URL first");
 		}
 

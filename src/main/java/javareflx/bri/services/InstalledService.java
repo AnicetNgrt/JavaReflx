@@ -1,5 +1,7 @@
 package javareflx.bri.services;
 
+import javareflx.bri.prog.Programmer;
+
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,12 +9,15 @@ import java.util.List;
 public class InstalledService {
     private Class<?> serviceClass;
     private List<Object> instances;
-    private int index;
+    private Programmer owner;
 
-    public InstalledService(int index, Class<?> serviceClass) {
-        this.index = index;
+    public InstalledService(Class<?> serviceClass) {
         instances = new ArrayList<>();
         this.serviceClass = serviceClass;
+    }
+
+    public void setOwner(Programmer prog) {
+        owner = prog;
     }
 
     public void addInstance(Object instance) {
@@ -32,5 +37,9 @@ public class InstalledService {
 
     public String getName() {
         return serviceClass.getName();
+    }
+
+    public boolean isOwner(Programmer prog) {
+        return prog == owner;
     }
 }

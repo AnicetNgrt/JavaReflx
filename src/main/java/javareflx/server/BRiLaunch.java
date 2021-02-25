@@ -38,7 +38,7 @@ public class BRiLaunch {
 				try {
 					String className = clavier.next();
 					// charger la classe et la déclarer au ServiceRegistry
-					ServiceRegistry.addService(ClassLoader.getSystemClassLoader(), className);
+					ServiceRegistry.uninstallService(ClassLoader.getSystemClassLoader(), className);
 
 					System.out.println(ServiceRegistry.staticToString());
 				} catch (Exception e) {
