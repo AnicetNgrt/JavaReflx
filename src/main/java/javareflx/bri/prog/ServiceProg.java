@@ -67,12 +67,18 @@ class ServiceProg extends Service {
 		receive();
 	}
 
+	/**
+	 * @param args [login, password]
+	 * */
 	private String commandRegister(String[] args) throws ArgumentsMissingException, InstanceCreationFailedException {
 		if(args.length < 2) throw new ArgumentsMissingException("missing login or password");
 		programmer = ProgrammerRegistry.addProgrammer(args[0], args[1]);
 		return "ok "+args[0];
 	}
 
+	/**
+	 * @param args [login, password]
+	 * */
 	private String commandLogin(String[] args) throws ArgumentsMissingException, AuthenticationFailedException {
 		if(args.length < 2) throw new ArgumentsMissingException("missing login or password");
 		try {
@@ -85,6 +91,9 @@ class ServiceProg extends Service {
 		return "ok "+args[0];
 	}
 
+	/**
+	 * @param args [ftpUrl]
+	 * */
 	private String commandSetFtp(String[] args) throws ArgumentsMissingException, AuthenticationFailedException, NotCertifiedException {
 		if(args.length < 1) throw new ArgumentsMissingException("missing ftp url");
 		if(programmer == null) throw new AuthenticationFailedException("not logged in");
@@ -101,6 +110,9 @@ class ServiceProg extends Service {
 		return "ok you are now certified";
 	}
 
+	/**
+	 * @param args [className]
+	 * */
 	private String commandInstall(String[] args) throws ArgumentsMissingException, AuthenticationFailedException, NotCertifiedException, InvalidServiceException {
 		if(args.length < 1) throw new ArgumentsMissingException("missing class name");
 		if(programmer == null) throw new AuthenticationFailedException("not logged in");
@@ -116,6 +128,9 @@ class ServiceProg extends Service {
 		return "ok installed";
 	}
 
+	/**
+	 * @param args [className]
+	 * */
 	private String commandUninstall(String[] args) throws ArgumentsMissingException, AuthenticationFailedException, NotCertifiedException {
 		if(args.length < 1) throw new ArgumentsMissingException("missing class name");
 		if(programmer == null) throw new AuthenticationFailedException("not logged in");
@@ -127,15 +142,15 @@ class ServiceProg extends Service {
 			throw new NotCertifiedException("not certified, register a valid ftp URL first");
 		}
 
-		return "ok installed";
+		return "ok uninstalled";
 	}
 
+	/**
+	 * @param args [className]
+	 * */
 	private String commandUpdate(String[] args) throws ArgumentsMissingException, AuthenticationFailedException, NotCertifiedException, InvalidServiceException {
-		try {
-			commandInstall(args);
-		} catch(Exception e) {
-			throw e;
-		}
+		commandUninstall(args);
+		commandInstall(args);
 		return "ok updated";
 	}
 }
