@@ -21,14 +21,16 @@ public class ServiceXml extends Service {
 
     @Override
     protected void onClientMessage(String message) {
-        File f = new File("C:\\Users\\thiba\\Desktop\\Thibault\\Iut Info\\2A\\Appref\\Projet\\JavaReflx\\src\\main\\java\\javareflx\\standard_services_exported\\ServiceXML\\test.xml");
-        System.out.println(getDependencies(f));
+        File f = new File(message);
+        sendMessage(getDependencies(f));
     }
 
 
     private String getDependencies(File fichier){
         try {
             StringBuilder sb = new StringBuilder();
+            sb.append(fichier.getAbsolutePath()).append("\\n");
+
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -43,7 +45,20 @@ public class ServiceXml extends Service {
                 sb.append("name : ");
                 sb.append(element.getElementsByTagName("groupId").item(0).getTextContent()).append(".");
                 sb.append(element.getElementsByTagName("artifactId").item(0).getTextContent()).append("\\n");
+            }
 
+            sb.append("Dépendances : \\n");
+            NodeList nodeListDependency = doc.getElementsByTagName("dependency");
+            for (int i = 0; i < nodeListDependency.getLength(); i++){
+                Node repository = nodeListDependency.item(i);
+                if (repository.getNodeType() == Node.ELEMENT_NODE){
+                    Element element = (Element) repository;
+
+                    sb.append(i).append(" : ");
+                    sb.append(element.getElementsByTagName("groupId").item(0).getTextContent()).append(".");
+                    sb.append(element.getElementsByTagName("artifactId").item(0).getTextContent()).append("  | Version : ");
+                    sb.append(element.getElementsByTagName("version").item(0).getTextContent()).append("\\n");
+                }
             }
             return sb.toString();
         }catch (Exception e){
