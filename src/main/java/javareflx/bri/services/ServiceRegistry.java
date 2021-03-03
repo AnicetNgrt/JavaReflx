@@ -19,7 +19,7 @@ public class ServiceRegistry {
 	private static HashMap<String, InstalledService> services;
 	private static List<String> servicesNames;
 
-	public static InstalledService installService(ClassLoader cl, String serviceName) throws InvalidServiceException {
+	public static synchronized InstalledService installService(ClassLoader cl, String serviceName) throws InvalidServiceException {
 		InstalledService is = null;
 		try{
 			Class<?> c = cl.loadClass(serviceName);
@@ -40,11 +40,12 @@ public class ServiceRegistry {
 		return is;
 	}
 
-	public static void uninstallService(String name) throws InstanceNotFoundException {
+	public static synchronized void uninstallService(String name) throws InstanceNotFoundException {
 		InstalledService is = services.get(name);
 		if(is == null) throw new InstanceNotFoundException("Unknown service name "+name);
 		services.remove(name);
 		servicesNames.remove(name);
+		System.gc(); // suppression de la classe au plus vite pour éviter les race condition
 	}
 
 	public static InstalledService getService(int index) throws InstanceNotFoundException {

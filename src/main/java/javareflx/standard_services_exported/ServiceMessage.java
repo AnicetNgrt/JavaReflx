@@ -1,4 +1,4 @@
-package javareflx.standard_services.test;
+package javareflx.standard_services_exported;
 
 import javafx.util.Pair;
 import javareflx.bri.services.Service;
