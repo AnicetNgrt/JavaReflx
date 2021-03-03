@@ -119,7 +119,7 @@ class ServiceProg extends Service {
 		if(!programmer.isCertified()) throw new NotCertifiedException("not certified, register a valid ftp URL first");
 
 		try {
-			InstalledService is = ServiceRegistry.uninstallService(programmer.getDefaultClassLoader(), args[0]);
+			InstalledService is = ServiceRegistry.installService(programmer.getDefaultClassLoader(), args[0]);
 			is.setOwner(programmer);
 		} catch (MalformedURLException e) {
 			throw new NotCertifiedException("not certified, register a valid ftp URL first");

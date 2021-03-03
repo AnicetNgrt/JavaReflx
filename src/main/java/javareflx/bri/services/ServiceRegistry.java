@@ -19,7 +19,7 @@ public class ServiceRegistry {
 	private static HashMap<String, InstalledService> services;
 	private static List<String> servicesNames;
 
-	public static InstalledService uninstallService(ClassLoader cl, String serviceName) throws InvalidServiceException {
+	public static InstalledService installService(ClassLoader cl, String serviceName) throws InvalidServiceException {
 		InstalledService is = null;
 		try{
 			Class<?> c = cl.loadClass(serviceName);
