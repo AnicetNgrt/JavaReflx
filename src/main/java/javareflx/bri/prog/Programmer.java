@@ -37,9 +37,8 @@ public class Programmer {
     }
 
     public ClassLoader getDefaultClassLoader() throws MalformedURLException {
-        String fileDirURL = "ftp://"+ftpUrl;
-        return new URLClassLoader(new URL[] { // ftp://username:password@speedtest.tele2.net/classes/
-                new URL(fileDirURL)
+        return new URLClassLoader(new URL[] {
+                ftpUrl
         });
     }
 }

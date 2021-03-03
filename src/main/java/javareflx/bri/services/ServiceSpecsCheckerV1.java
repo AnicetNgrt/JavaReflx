@@ -1,11 +1,5 @@
 package javareflx.bri.services;
 
-import javareflx.standard_services.ServiceInversion;
-
-import java.lang.reflect.Method;
-import java.net.Socket;
-import java.util.Arrays;
-
 public class ServiceSpecsCheckerV1 implements ServiceSpecsChecker {
 
     public boolean isCompliant(Class<?> c) {

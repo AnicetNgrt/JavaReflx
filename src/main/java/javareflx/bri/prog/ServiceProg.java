@@ -50,6 +50,8 @@ class ServiceProg extends Service {
 				case "install":
 					serverMessage = commandInstall(args);
 					break;
+				/*case "installjar":
+					serverMessage = commandInstallJar(args);*/
 				case "update":
 					serverMessage = commandUpdate(args);
 					break;
@@ -127,6 +129,26 @@ class ServiceProg extends Service {
 
 		return "ok installed";
 	}
+
+	/**
+	 * @param args [jarpath, className]
+	 * */
+	/*private String commandInstallJar(String[] args) throws ArgumentsMissingException, AuthenticationFailedException, NotCertifiedException, InvalidServiceException {
+		if(args.length < 2) throw new ArgumentsMissingException("missing class name or jar path");
+		if(programmer == null) throw new AuthenticationFailedException("not logged in");
+		if(!programmer.isCertified()) throw new NotCertifiedException("not certified, register a valid ftp URL first");
+
+
+
+		try {
+			InstalledService is = ServiceRegistry.installService(programmer.getDefaultClassLoader(), args[0]);
+			is.setOwner(programmer);
+		} catch (MalformedURLException e) {
+			throw new NotCertifiedException("not certified, register a valid ftp URL first");
+		}
+
+		return "ok installed";
+	}*/
 
 	/**
 	 * @param args [className]

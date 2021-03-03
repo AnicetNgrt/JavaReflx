@@ -3,12 +3,12 @@ package javareflx.bri.services;
 import javareflx.bri.exceptions.InvalidServiceException;
 import javareflx.bri.exceptions.InstanceNotFoundException;
 
+import java.lang.instrument.Instrumentation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class ServiceRegistry {
-
 	static {
 		specs = new ServiceSpecsCheckerV1();
 		services = new HashMap<String, InstalledService>();
@@ -33,6 +33,7 @@ public class ServiceRegistry {
 			servicesNames.add(serviceName);
 
 		} catch (ClassNotFoundException e){
+			e.printStackTrace();
 			throw new InvalidServiceException("Service "+serviceName+" cannot be found");
 		}
 
@@ -57,11 +58,11 @@ public class ServiceRegistry {
 	public static String staticToString() {
 		StringBuilder result = new StringBuilder("Available activities :");
 		int index = 1;
-		for (InstalledService installedService:services.values()){
+		for (String sn:servicesNames){
 			result.append("\\n");
 			result.append(index++);
 			result.append(" ");
-			result.append(installedService.getName());
+			result.append(sn);
 		}
 		return result.toString();
 	}
