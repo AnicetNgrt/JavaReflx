@@ -1,5 +1,6 @@
 .target/
 .idea/discord.xml
-.idea/discord.xml
 .idea/
 /target/
+/src/main/java/javareflx/standard_services_exported/ServiceXML/test.xml
+/src/main/java/javareflx/standard_services_exported/ServiceXML/user.xml
