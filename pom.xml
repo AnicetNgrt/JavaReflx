@@ -40,6 +40,11 @@
       <artifactId>javax.mail</artifactId>
       <version>1.6.2</version>
     </dependency>
+    <dependency>
+      <groupId>commons-net</groupId>
+      <artifactId>commons-net</artifactId>
+      <version>20030805.205232</version>
+    </dependency>
   </dependencies>
 
   <build>

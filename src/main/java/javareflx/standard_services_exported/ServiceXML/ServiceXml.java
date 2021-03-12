@@ -2,6 +2,7 @@ package javareflx.standard_services_exported.ServiceXML;
 
 import javareflx.bri.services.Service;
 
+import org.apache.commons.net.ftp.FTPClient;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -12,14 +13,21 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
+import java.io.*;
+import java.net.URL;
 import java.util.Properties;
+
 
 public class ServiceXml extends Service {
     private enum State{
+        FTP,
+        PORT,
         FILE,
         EMAIL
     }
+
+    private File file;
+    private static long fileCount = 0;
 
     private State state = State.FILE;
 
@@ -29,6 +37,7 @@ public class ServiceXml extends Service {
     protected void onStart() {
         sendMessage("Ce service permet de donner les dépendances d'un fichier projet Maven à partir de son fichier xml. Donnez son chemin :");
         receive();
+        URL ftpUrl = new URL()
     }
 
     @Override
@@ -127,6 +136,27 @@ public class ServiceXml extends Service {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private boolean downloadXml(String server, int port, String remoteFile, int adress){
+        FTPClient ftpClient = new FTPClient();
+        try{
+            ftpClient.connect(server,port);
+            ftpClient.enterLocalPassiveMode();
+
+            File downloadFile = new File("/serviceXml/data/" + fileCount + ".xml");
+            fileCount++;
+
+            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile));
+            boolean success = ftpClient.retrieveFile(remoteFile, outputStream);
+
+            if (success){
+                return true;
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private static String[] getInformationConnection(){
