@@ -2,6 +2,7 @@ package javareflx.standard_services_exported.ServiceXML;
 
 import javareflx.bri.services.Service;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -31,26 +32,51 @@ public class ServiceXml extends Service {
 
     private State state = State.FILE;
 
+    private String server;
+    private int port;
     private String path;
 
     @Override
     protected void onStart() {
-        sendMessage("Ce service permet de donner les dépendances d'un fichier projet Maven à partir de son fichier xml. Donnez son chemin :");
+        sendMessage("Ce service permet de donner les dépendances d'un fichier projet Maven à partir de son fichier xml.\\n" +
+                "Entrez l'adresse de votre serveur ftp");
+        state = State.FTP;
         receive();
-        URL ftpUrl = new URL()
     }
 
     @Override
     protected void onClientMessage(String message) {
         switch (state){
+            case FTP:
+                this.server = message;
+                sendMessage("Veuillez reseigner le port");
+                state = State.PORT;
+                receive();
+                break;
+            case PORT:
+                try {
+                    this.port = Integer.parseInt(message);
+                    sendMessage("Entrez le chemin du fichier");
+                    state = State.FILE;
+                    receive();
+                }catch (NumberFormatException e){
+                    sendMessage("Port incorrect, veuillez entrer le port de nouveau");
+                    receive();
+                }
+                break;
             case FILE:
                 this.path = message;
+                if(!this.downloadXml()){
+                    sendMessage("Fichier incorrect, entrez l'adresse de votre serveur ftp.");
+                    state = State.FTP;
+                    receive();
+                }
                 sendMessage("Entrez votre adresse e-mail");
                 state = State.EMAIL;
                 receive();
                 break;
             case EMAIL:
-                boolean mail = sendMail(message, getDependencies(new File(path)));
+                boolean mail = sendMail(message, getDependencies());
                 if (mail){
                     sendMessage("Mail envoyé !");
                 }else {
@@ -62,18 +88,17 @@ public class ServiceXml extends Service {
 
     /**
      * Lit les dépendances d'un fichier XML Maven
-     * @param fichier Le fichier XML
      * @return Les Dépendances sous forme d'une String
      */
-    private String getDependencies(File fichier){
+    private String getDependencies(){
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append(fichier.getAbsolutePath()).append("\n");
+            sb.append(file.getAbsolutePath()).append("\n");
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(fichier);
+            Document doc = db.parse(file);
             doc.getDocumentElement().normalize();
 
             NodeList nodeListProject = doc.getElementsByTagName("project");
@@ -138,23 +163,33 @@ public class ServiceXml extends Service {
         }
     }
 
-    private boolean downloadXml(String server, int port, String remoteFile, int adress){
+    private boolean downloadXml(){
         FTPClient ftpClient = new FTPClient();
         try{
             ftpClient.connect(server,port);
             ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
-            File downloadFile = new File("/serviceXml/data/" + fileCount + ".xml");
+            file = new File("/serviceXml/data/");
+            file.mkdirs();
+            file = new File(file,fileCount + ".xml");
             fileCount++;
 
-            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile));
-            boolean success = ftpClient.retrieveFile(remoteFile, outputStream);
+            file.createNewFile();
 
+            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
+            boolean success = ftpClient.retrieveFile(path, outputStream);
+
+            System.out.println(ftpClient.getStatus(path));
+            outputStream.close();
             if (success){
                 return true;
+            }else {
+                System.out.println("c'est pas un succes !");
             }
         }catch (IOException e){
             e.printStackTrace();
+            return false;
         }
         return false;
     }
